@@ -1,3 +1,61 @@
+from __future__ import division
+
+thermister_chart =  [[ 21.736, 61 ],
+                     [ 20.919, 62 ],
+                     [ 17.980, 66 ],
+                     [ 17.321, 67 ],
+                     [ 11.223, 79 ],
+                     [ 10.837, 80 ],
+                     [ 5.9361 , 98 ],
+                     [ 5.7492 , 99 ],
+                     [ 4.0829 , 110],
+                     [ 3.9611 , 111],
+                    ]
+thermister_chart.reverse()
+
+def slope (x1, x2, y1, y2):
+    x2 = (x2 - x1)
+    y2 = (y2 - y1)
+
+    m = (y2/x2)
+    return m
+
+def intercept(x1, x2, y1, y2):
+    m = slope(x1,y1,x2,y2)
+    b = y2 - (m*x2)
+    return b 
+
+def linear_interpolate(x1,x2,y1,y2,t):
+    from scipy.interpolate import interp1d
+
+    linear =  interp1d([x1,x2], [y1,y2])
+
+    print x1,x2, t
+
+    return linear(t)
+
+
+def thermister_converter(t):
+
+    for i in xrange(len(thermister_chart)):
+        if t <= thermister_chart[i][0]:
+            index = i
+            break
+    else:
+        print "SOMETHING FUCKED UP THERE IS NO THERMISTER VALUE FOR THIS"
+
+    x1 = thermister_chart[index - 1][0]
+    y1 = thermister_chart[index - 1][1]
+    x2 = thermister_chart[index][0]
+    y2 = thermister_chart[index][1]
+
+
+    return linear_interpolate(x1,x2,y1,y2, t)
+
+print thermister_converter(4.002)
+
+    
+
 
 ## E1
 
@@ -18,7 +76,13 @@ glass= [ 9 ,0    ,0.05 , 0.05, 0.03 , 4.002] ## at 5 cm
 nglass=[ 9 ,17.42,1.03 , 2.97, 2.97 , 17.45]
 
 
+
+
+
+
+
 ## E2
+
 
 rref       = 0.4990 #Ohm
 rref_ucert = 0.0002
